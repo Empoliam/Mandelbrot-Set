@@ -9,12 +9,12 @@ import org.apache.commons.math3.complex.Complex;
 
 public class Main {
 
-	static int ITERATIONS = 255;
-	static double IMAGE_X = 2000;
-	static double IMAGE_Y = 2000;
-	static double ZOOM = 1.0;
-	static double CENTRE_X = -0.75;
-	static double CENTRE_Y = 0.1;
+	static int ITERATIONS = 256;
+	static double IMAGE_X = 3000;
+	static double IMAGE_Y = 3000;
+	static double ZOOM = 500.0;
+	static double CENTRE_X = -0.747;
+	static double CENTRE_Y = 0.1005;
 	static boolean CROSSHAIR = true;
 
 	static BufferedImage output = new BufferedImage((int)IMAGE_X,(int)IMAGE_Y,BufferedImage.TYPE_INT_RGB);
