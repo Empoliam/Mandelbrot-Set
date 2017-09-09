@@ -10,8 +10,8 @@ import org.apache.commons.math3.complex.Complex;
 public class Main {
 
 	static int ITERATIONS = 256;
-	static double IMAGE_X = 3000;
-	static double IMAGE_Y = 3000;
+	static double IMAGE_X = 2000;
+	static double IMAGE_Y = 2000;
 	static double ZOOM = 500.0;
 	static double CENTRE_X = -0.747;
 	static double CENTRE_Y = 0.1005;
@@ -66,7 +66,7 @@ public class Main {
 			z = z.multiply(z);			
 			z = z.add(c);
 
-			if((z.getReal()*z.getReal()) + (z.getImaginary()*z.getImaginary()) > 2){
+			if((z.getReal() > 2.0 || z.getImaginary() > 2.0)){
 				escape = k;
 				break;
 			}
