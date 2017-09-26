@@ -5,17 +5,15 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.math3.complex.Complex;
-
 public class Main {
 
-	static int ITERATIONS = 256;
-	static double IMAGE_X = 2000;
-	static double IMAGE_Y = 2000;
-	static double ZOOM = 500.0;
-	static double CENTRE_X = -0.747;
-	static double CENTRE_Y = 0.1005;
-	static boolean CROSSHAIR = true;
+	static int ITERATIONS = 768;
+	static double IMAGE_X = 32000;
+	static double IMAGE_Y = 32000;
+	static double ZOOM = 1000.0;
+	static double CENTRE_X = -0.709;
+	static double CENTRE_Y = 0.2448;
+	static boolean CROSSHAIR = false;
 
 	static BufferedImage output = new BufferedImage((int)IMAGE_X,(int)IMAGE_Y,BufferedImage.TYPE_INT_RGB);
 
@@ -31,10 +29,12 @@ public class Main {
 				double real = ((x - ( IMAGE_X/2)) * (3 / IMAGE_X) / ZOOM) + CENTRE_X;
 				double img =  ((y - (IMAGE_Y/2)) * (3 / IMAGE_Y) / ZOOM) - CENTRE_Y;
 
-				int escape = check(new Complex(real,img));
+				int escape = check(new Imaginary(real,img));
 
 				if(escape == ITERATIONS+1) output.setRGB(x,y,0x000000);
-				else output.setRGB(x, y, new Color(escape%256,escape%256,0).getRGB());
+				else if(escape >= 512) output.setRGB(x, y, new Color(255,escape%256,255).getRGB());
+				else if(escape >= 256) output.setRGB(x, y, new Color(escape%256,0,255).getRGB());
+				else output.setRGB(x, y, new Color(0,0,escape%256).getRGB());
 
 				if(CROSSHAIR){
 					if(x == IMAGE_X/2) output.setRGB(x, y, Color.WHITE.getRGB());
@@ -55,10 +55,10 @@ public class Main {
 
 	}
 
-	static int check(Complex c)
+	static int check(Imaginary c)
 	{
 
-		Complex z = new Complex(0.0, 0.0);
+		Imaginary z = new Imaginary(0.0, 0.0);
 		int escape = ITERATIONS+1;
 
 		for(int k = 1; k <= ITERATIONS; k++){
@@ -66,7 +66,7 @@ public class Main {
 			z = z.multiply(z);			
 			z = z.add(c);
 
-			if((z.getReal() > 2.0 || z.getImaginary() > 2.0)){
+			if((z.r > 2.0 || z.i > 2.0)){
 				escape = k;
 				break;
 			}
