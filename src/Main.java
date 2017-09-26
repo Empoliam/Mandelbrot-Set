@@ -7,13 +7,13 @@ import javax.imageio.ImageIO;
 
 public class Main {
 
-	static int ITERATIONS = 512;
-	static double IMAGE_X = 3000;
-	static double IMAGE_Y = 3000;
+	static int ITERATIONS = 768;
+	static double IMAGE_X = 32000;
+	static double IMAGE_Y = 32000;
 	static double ZOOM = 1000.0;
-	static double CENTRE_X = -0.747;
-	static double CENTRE_Y = 0.1005;
-	static boolean CROSSHAIR = true;
+	static double CENTRE_X = -0.709;
+	static double CENTRE_Y = 0.2448;
+	static boolean CROSSHAIR = false;
 
 	static BufferedImage output = new BufferedImage((int)IMAGE_X,(int)IMAGE_Y,BufferedImage.TYPE_INT_RGB);
 
@@ -32,6 +32,7 @@ public class Main {
 				int escape = check(new Imaginary(real,img));
 
 				if(escape == ITERATIONS+1) output.setRGB(x,y,0x000000);
+				else if(escape >= 512) output.setRGB(x, y, new Color(255,escape%256,255).getRGB());
 				else if(escape >= 256) output.setRGB(x, y, new Color(escape%256,0,255).getRGB());
 				else output.setRGB(x, y, new Color(0,0,escape%256).getRGB());
 
