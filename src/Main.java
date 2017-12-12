@@ -8,8 +8,8 @@ import javax.imageio.ImageIO;
 public class Main {
 
 	static int ITERATIONS = 768;
-	static double IMAGE_X = 32000;
-	static double IMAGE_Y = 32000;
+	static double IMAGE_X = 1000;
+	static double IMAGE_Y = 1000;
 	static double ZOOM = 1000.0;
 	static double CENTRE_X = -0.709;
 	static double CENTRE_Y = 0.2448;
@@ -51,7 +51,7 @@ public class Main {
 
 		long END = System.nanoTime();
 
-		System.out.println((END - START) / 1000000000);
+		System.out.println((END - START) / 1000000);
 
 	}
 
