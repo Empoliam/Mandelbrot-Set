@@ -8,8 +8,8 @@ import javax.imageio.ImageIO;
 public class Main {
 
 	static int ITERATIONS = 768;
-	static double IMAGE_X = 4000;
-	static double IMAGE_Y = 4000;
+	static double IMAGE_X = 2000;
+	static double IMAGE_Y = 2000;
 	static double ZOOM = 1000.0;
 	static double CENTRE_X = -0.709;
 	static double CENTRE_Y = 0.2448;
@@ -30,8 +30,11 @@ public class Main {
 
 		for(int k = 0; k < THREADS; k++) {
 
+			if( k == THREADS - 1) { yMax = (int) IMAGE_Y; }
+			
 			threads[k] = new Thread(new CalcThread(yMin, yMax));
 			threads[k].start();
+			
 			yMin += IMAGE_Y/THREADS;
 			yMax += IMAGE_Y/THREADS;
 
