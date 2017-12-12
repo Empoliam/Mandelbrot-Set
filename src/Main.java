@@ -8,51 +8,95 @@ import javax.imageio.ImageIO;
 public class Main {
 
 	static int ITERATIONS = 768;
-	static double IMAGE_X = 1000;
-	static double IMAGE_Y = 1000;
+	static double IMAGE_X = 4000;
+	static double IMAGE_Y = 4000;
 	static double ZOOM = 1000.0;
 	static double CENTRE_X = -0.709;
 	static double CENTRE_Y = 0.2448;
 	static boolean CROSSHAIR = false;
+	
+	static int THREADS = Runtime.getRuntime().availableProcessors();
 
 	static BufferedImage output = new BufferedImage((int)IMAGE_X,(int)IMAGE_Y,BufferedImage.TYPE_INT_RGB);
 
-	public static void main(String args[])
-	{
+	public static void main(String args[]) {
 
 		long START = System.nanoTime();
 
-		for(int x = 0; x < (int)IMAGE_X; x ++){
+		int yMin = 0;
+		int yMax = (int) (IMAGE_Y/THREADS);
 
-			for (int y = 0; y < (int)IMAGE_Y; y++){
+		Thread[] threads = new Thread[THREADS];
 
-				double real = ((x - ( IMAGE_X/2)) * (3 / IMAGE_X) / ZOOM) + CENTRE_X;
-				double img =  ((y - (IMAGE_Y/2)) * (3 / IMAGE_Y) / ZOOM) - CENTRE_Y;
+		for(int k = 0; k < THREADS; k++) {
 
-				int escape = check(new Imaginary(real,img));
-
-				if(escape == ITERATIONS+1) output.setRGB(x,y,0x000000);
-				else if(escape >= 512) output.setRGB(x, y, new Color(255,escape%256,255).getRGB());
-				else if(escape >= 256) output.setRGB(x, y, new Color(escape%256,0,255).getRGB());
-				else output.setRGB(x, y, new Color(0,0,escape%256).getRGB());
-
-				if(CROSSHAIR){
-					if(x == IMAGE_X/2) output.setRGB(x, y, Color.WHITE.getRGB());
-					if(y == IMAGE_Y/2) output.setRGB(x, y, Color.WHITE.getRGB());
-				}
-
-			}
+			threads[k] = new Thread(new CalcThread(yMin, yMax));
+			threads[k].start();
+			yMin += IMAGE_Y/THREADS;
+			yMax += IMAGE_Y/THREADS;
 
 		}
 
+		for(int i = 0; i < threads.length; i++) {
+			try {
+				threads[i].join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}	
+		}
+
+		long CALC = System.nanoTime();
+		System.out.println((CALC-START)/1000000);
+		
 		File f = new File("mandelbrot.png");
 		try { ImageIO.write(output, "PNG", f); }
 		catch(IOException e){System.out.println("Failed to print"); };
 
 		long END = System.nanoTime();
+		
+		System.out.println((END - CALC) / 1000000);
+		System.out.println((END-START)/1000000);
 
-		System.out.println((END - START) / 1000000);
+	}
 
+	static class CalcThread implements Runnable {
+
+		private int yMax;
+		private int yMin;
+
+		public CalcThread(int yMin, int yMax) {
+			this.yMin = yMin;
+			this.yMax = yMax;
+		}
+
+		@Override
+		public void run() {
+
+			for(int x = 0; x < (int)IMAGE_X; x ++){
+
+				for (int y = yMin; y < (int)yMax; y++){
+
+					double real = ((x - ( IMAGE_X/2)) * (3 / IMAGE_X) / ZOOM) + CENTRE_X;
+					double img =  ((y - (IMAGE_Y/2)) * (3 / IMAGE_Y) / ZOOM) - CENTRE_Y;
+
+					int escape = check(new Imaginary(real,img));
+
+					if(escape == ITERATIONS+1) output.setRGB(x,y,0x000000);
+					else if(escape >= 512) output.setRGB(x, y, new Color(255,escape%256,255).getRGB());
+					else if(escape >= 256) output.setRGB(x, y, new Color(escape%256,0,255).getRGB());
+					else output.setRGB(x, y, new Color(0,0,escape%256).getRGB());
+
+					if(CROSSHAIR){
+						if(x == IMAGE_X/2) output.setRGB(x, y, Color.WHITE.getRGB());
+						if(y == IMAGE_Y/2) output.setRGB(x, y, Color.WHITE.getRGB());
+					}
+
+				}
+
+			}
+
+		}
+		
 	}
 
 	static int check(Imaginary c)
