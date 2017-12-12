@@ -8,11 +8,11 @@ import javax.imageio.ImageIO;
 public class Main {
 
 	static int ITERATIONS = 768;
-	static double IMAGE_X = 2000;
-	static double IMAGE_Y = 2000;
-	static double ZOOM = 1000.0;
-	static double CENTRE_X = -0.709;
-	static double CENTRE_Y = 0.2448;
+	static double IMAGE_X = 3200;
+	static double IMAGE_Y = 3200;
+	static double ZOOM = 2000000000.0;
+	static double CENTRE_X = -0.3739983244;
+	static double CENTRE_Y = -0.65974973925;
 	static boolean CROSSHAIR = false;
 	
 	static int THREADS = Runtime.getRuntime().availableProcessors();
